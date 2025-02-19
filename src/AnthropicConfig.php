@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LLPhant;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 class AnthropicConfig
 {
@@ -26,7 +26,7 @@ class AnthropicConfig
         public readonly int $maxTokens = 1024,
         public readonly array $modelOptions = [],
         public readonly ?string $apiKey = null,
-        public readonly ?Client $client = null, )
+        public readonly ?ClientInterface $client = null, )
     {
     }
 }

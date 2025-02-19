@@ -3,6 +3,7 @@
 namespace LLPhant\Chat;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Utils;
 use LLPhant\AnthropicConfig;
 use LLPhant\Chat\Anthropic\AnthropicMessage;
@@ -30,7 +31,7 @@ class AnthropicChat implements ChatInterface
     /** @var array<string, mixed> */
     private array $modelOptions = [];
 
-    public Client $client;
+    public ClientInterface $client;
 
     private readonly string $model;
 
@@ -52,7 +53,7 @@ class AnthropicChat implements ChatInterface
         $this->maxTokens = $config->maxTokens;
         $this->logger = $logger ?: new NullLogger();
 
-        if ($config->client instanceof Client) {
+        if ($config->client instanceof ClientInterface) {
             $this->client = $config->client;
         } else {
             $this->client = new Client([
