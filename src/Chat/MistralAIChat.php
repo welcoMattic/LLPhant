@@ -18,7 +18,9 @@ class MistralAIChat extends OpenAIChat
 {
     private const BASE_URL = 'api.mistral.ai/v1';
 
-    public function __construct(?OpenAIConfig $config = null, ?LoggerInterface $logger = null)
+    public function __construct(
+        ?OpenAIConfig $config = null,
+        ?LoggerInterface $logger = null, )
     {
         if (! $config instanceof OpenAIConfig) {
             $config = new OpenAIConfig();
