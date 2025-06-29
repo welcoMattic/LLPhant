@@ -51,13 +51,16 @@ class OpenAIAudio
      */
     public function translate(string $fileName, ?string $prompt = null): string
     {
-        $response = $this->client->audio()->translate([
+        $parameters = [
             ...$this->modelOptions,
             'model' => $this->model,
             'file' => fopen($fileName, 'r'),
             'response_format' => 'verbose_json',
-            'prompt' => $prompt,
-        ]);
+        ];
+        if ($prompt) {
+            $parameters['prompt'] = $prompt;
+        }
+        $response = $this->client->audio()->translate($parameters);
 
         return $response->text;
     }
