@@ -136,7 +136,7 @@ class AnthropicChat implements ChatInterface
     {
         $params = $this->createParams($messages, true);
 
-        $response = $this->sendRequest($params, true);
+        $response = $this->sendRequest($params);
 
         return $this->decodeStreamOfChat($response);
     }
@@ -192,7 +192,7 @@ class AnthropicChat implements ChatInterface
      */
     protected function getJsonMessagesResponse(array $params): array
     {
-        $response = $this->sendRequest($params, false);
+        $response = $this->sendRequest($params);
 
         $contents = $response->getBody()->getContents();
 
@@ -200,26 +200,25 @@ class AnthropicChat implements ChatInterface
     }
 
     /**
-     * @param  array<string, mixed>  $json
+     * @param  array<string, mixed>  $data
      *
      * @throws HttpException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function sendRequest(array $json, bool $stream): ResponseInterface
+    protected function sendRequest(array $data): ResponseInterface
     {
         $this->logger->debug('Calling POST v1/messages', [
             'chat' => self::class,
-            'params' => $json,
+            'params' => $data,
         ]);
 
         $uri = sprintf('%s/v1/messages', rtrim(self::DEFAULT_URL, '/'));
-        $body = ['stream' => $stream, 'json' => $json];
 
         $request = $this->factory->createRequest('POST', $uri);
         $request = $request->withAddedHeader('Content-Type', 'application/json');
         $request = $request->withAddedHeader('x-api-key', $this->apiKey);
         $request = $request->withAddedHeader('anthropic-version', self::CURRENT_VERSION);
-        $request = $request->withBody($this->factory->createStream(json_encode($body, JSON_THROW_ON_ERROR)));
+        $request = $request->withBody($this->factory->createStream(json_encode($data, JSON_THROW_ON_ERROR)));
         $response = $this->client->sendRequest($request);
 
         $status = $response->getStatusCode();
